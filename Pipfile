@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 thematt = {path = ".",editable = true}
-mattapi = "==0.85"
+mattapi = "==0.91"
 
 [dev-packages]
 pylint = "*"
