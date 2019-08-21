@@ -1,0 +1,15 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+thematt = {path = ".",editable = true}
+mattapi = "==0.85"
+
+[dev-packages]
+pylint = "*"
+pep8 = "*"
+
+[requires]
+python_version = "3.7"
