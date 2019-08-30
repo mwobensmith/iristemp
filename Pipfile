@@ -4,8 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-thematt = {path = ".",editable = true}
-mattapi = "==0.92"
+mattapi = "==0.99.03"
 
 [dev-packages]
 pylint = "*"

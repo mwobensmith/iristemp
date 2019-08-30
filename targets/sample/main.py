@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+from mattapi.api.settings import Settings
 from mattapi.base.target import *
 
 
@@ -11,7 +11,6 @@ class Target(BaseTarget):
         BaseTarget.__init__(self)
         self.args = self.get_target_args()
         self.target_name = 'Sample'
-
         self.cc_settings = [
             {'name': 'build', 'type': 'list', 'label': 'Build',
              'value': ['build1', 'build2', 'build3'], 'default': 'build1'},
@@ -20,6 +19,8 @@ class Target(BaseTarget):
             {'name': 'override', 'type': 'checkbox', 'label': 'Run disabled tests'},
             {'name': 'special', 'type': 'checkbox', 'label': 'I am special'},
         ]
+        Settings.debug_image = True
+        print('hiiiii')
 
     def get_target_args(self):
         parser = argparse.ArgumentParser(description='Sample-specific arguments', prog='iris')

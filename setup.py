@@ -9,7 +9,8 @@ PACKAGE_NAME = 'iristemp'
 PACKAGE_VERSION = '0.1'
 
 INSTALL_REQUIRES = [
-'mattapi==0.92'
+'mattapi==0.99.03'
+#'mattapi-targets==0.77'
 ]
 
 TESTS_REQUIRE = [
