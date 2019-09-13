@@ -9,8 +9,8 @@ PACKAGE_NAME = 'iristemp'
 PACKAGE_VERSION = '0.1'
 
 INSTALL_REQUIRES = [
-'mattapi==0.99.03'
-#'mattapi-targets==0.77'
+#'moziris==0.99.03'
+#'moziris-targets==0.77'
 ]
 
 TESTS_REQUIRE = [
@@ -55,10 +55,6 @@ setup(
     extras_require={'dev': DEV_REQUIRES},  # For `pip install -e .[dev]`
     entry_points={
         'console_scripts': [
-            'test = mattapi.scripts.test:foo',
-            'lite = mattapi.scripts.test:main',
-            'iris = mattapi.scripts.__main__:main',
-            'api = mattapi.scripts.some_test:my_test'
         ]
     }
 )

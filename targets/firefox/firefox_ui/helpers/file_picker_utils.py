@@ -7,16 +7,16 @@ import time
 import shutil
 import os
 
-from mattapi.api.errors import APIHelperError
-from mattapi.api.mouse.mouse import click
-from mattapi.api.finder.pattern import Pattern
+from moziris.api.errors import APIHelperError
+from moziris.api.mouse.mouse import click
+from moziris.api.finder.pattern import Pattern
 from targets.firefox.firefox_ui.helpers.general import INVALID_GENERIC_INPUT
 from targets.firefox.firefox_ui.helpers.general import open_directory
-from mattapi.api.settings import Settings
-from mattapi.api.keyboard.key import KeyModifier
-from mattapi.api.keyboard.keyboard import type
-from mattapi.api.os_helpers import OSHelper
-from mattapi.api.finder.finder import exists
+from moziris.api.settings import Settings
+from moziris.api.keyboard.key import KeyModifier
+from moziris.api.keyboard.keyboard import type
+from moziris.api.os_helpers import OSHelper
+from moziris.api.finder.finder import exists
 
 logger = logging.getLogger(__name__)
 

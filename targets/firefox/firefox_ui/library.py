@@ -3,9 +3,9 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from mattapi.api.enums import OSPlatform
-from mattapi.api.finder.pattern import Pattern
-from mattapi.api.os_helpers import OSHelper
+from moziris.api.enums import OSPlatform
+from moziris.api.finder.pattern import Pattern
+from moziris.api.os_helpers import OSHelper
 
 
 class Library(object):

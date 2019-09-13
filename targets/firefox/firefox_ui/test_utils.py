@@ -3,10 +3,10 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 import logging
 
-from mattapi.api.errors import FindError, APIHelperError
-from mattapi.api.finder.finder import wait, exists
-from mattapi.api.finder.pattern import Pattern
-from mattapi.api.mouse.mouse import click
+from moziris.api.errors import FindError, APIHelperError
+from moziris.api.finder.finder import wait, exists
+from moziris.api.finder.pattern import Pattern
+from moziris.api.mouse.mouse import click
 from targets.firefox.firefox_ui.nav_bar import NavBar
 
 logger = logging.getLogger(__name__)

@@ -2,8 +2,8 @@ import sys
 
 import pytest
 
-from mattapi.base.testcase import BaseTest
-from mattapi.api import *
+from moziris.base.testcase import BaseTest
+from moziris.api import *
 
 
 class Test(BaseTest):

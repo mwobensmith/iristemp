@@ -1,6 +1,6 @@
 import pytest
 
-from mattapi.base.testcase import BaseTest
+from moziris.base.testcase import BaseTest
 
 
 class Test(BaseTest):

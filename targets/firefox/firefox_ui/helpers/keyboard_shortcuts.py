@@ -6,15 +6,15 @@
 import logging
 import time
 
-from mattapi.api.errors import APIHelperError, FindError
-from mattapi.api.finder.pattern import Pattern
-from mattapi.api.keyboard.key import KeyModifier, Key
-from mattapi.api.keyboard.keyboard import key_down, key_up, type
-from mattapi.api.mouse.mouse import Mouse
-from mattapi.api.location import Location
-from mattapi.api.os_helpers import OSHelper
-from mattapi.api.screen.region import click, drag_drop, find, wait, wait_vanish
-from mattapi.api.settings import Settings
+from moziris.api.errors import APIHelperError, FindError
+from moziris.api.finder.pattern import Pattern
+from moziris.api.keyboard.key import KeyModifier, Key
+from moziris.api.keyboard.keyboard import key_down, key_up, type
+from moziris.api.mouse.mouse import Mouse
+from moziris.api.location import Location
+from moziris.api.os_helpers import OSHelper
+from moziris.api.screen.region import click, drag_drop, find, wait, wait_vanish
+from moziris.api.settings import Settings
 from targets.firefox.firefox_ui.location_bar import LocationBar
 from targets.firefox.firefox_ui.menus import SidebarBookmarks
 
@@ -707,5 +707,18 @@ def delete_selected_file():
         type(text='y')
     else:
         type(text=Key.DELETE)
+
+
+def release_often_used_keys():
+    """
+    Releases often used keys
+    """
+    key_up(KeyModifier.SHIFT)
+    key_up(KeyModifier.CTRL)
+    key_up(KeyModifier.ALT)
+    if OSHelper.is_mac():
+        key_up(KeyModifier.CMD)
+    if OSHelper.is_windows():
+        key_up(KeyModifier.WIN)
 
 # End Tools keyboard shortcuts

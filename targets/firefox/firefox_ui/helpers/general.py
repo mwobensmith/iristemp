@@ -7,26 +7,26 @@ import json
 import time
 import os
 
-from mattapi.api.enums import Alignment
-from mattapi.api.errors import APIHelperError
-from mattapi.api.errors import FindError
-from mattapi.api.finder.finder import wait, exists, wait_vanish
-from mattapi.api.finder.image_search import image_find
-from mattapi.api.finder.pattern import Pattern
-from mattapi.api.keyboard.key import *
-from mattapi.api.keyboard.key import Key
-from mattapi.api.keyboard.keyboard import type, key_up, key_down
-from mattapi.api.keyboard.keyboard_api import paste
-from mattapi.api.keyboard.keyboard_util import get_clipboard
-from mattapi.api.location import Location
-from mattapi.api.mouse.mouse import click, hover, Mouse, scroll_down, right_click
-from mattapi.api.os_helpers import OSHelper, OSPlatform
-from mattapi.api.screen.region import Region
-from mattapi.api.screen.screen import Screen
-from mattapi.api.settings import Settings
-from mattapi.util.arg_parser import get_core_args
-from mattapi.util.logger_manager import logger
-from mattapi.util.region_utils import RegionUtils
+from moziris.api.enums import Alignment
+from moziris.api.errors import APIHelperError
+from moziris.api.errors import FindError
+from moziris.api.finder.finder import wait, exists, wait_vanish
+from moziris.api.finder.image_search import image_find
+from moziris.api.finder.pattern import Pattern
+from moziris.api.keyboard.key import *
+from moziris.api.keyboard.key import Key
+from moziris.api.keyboard.keyboard import type, key_up, key_down
+from moziris.api.keyboard.keyboard_api import paste
+from moziris.api.keyboard.keyboard_util import get_clipboard
+from moziris.api.location import Location
+from moziris.api.mouse.mouse import click, hover, Mouse, scroll_down, right_click
+from moziris.api.os_helpers import OSHelper, OSPlatform
+from moziris.api.screen.region import Region
+from moziris.api.screen.screen import Screen
+from moziris.api.settings import Settings
+from moziris.util.arg_parser import get_core_args
+from moziris.util.logger_manager import logger
+from moziris.util.region_utils import RegionUtils
 from targets.firefox.firefox_ui.content_blocking import ContentBlocking
 from targets.firefox.firefox_ui.helpers.keyboard_shortcuts import new_tab, close_tab, edit_select_all, edit_copy
 from targets.firefox.firefox_ui.helpers.keyboard_shortcuts import select_location_bar
@@ -76,7 +76,7 @@ def change_preference(pref_name, value):
     try:
         new_tab()
         navigate('about:config')
-        time.sleep(Settings.DEFAULT_UI_DELAY)
+        time.sleep(Settings.DEFAULT_UI_DELAY_LONG)
 
         type(Key.SPACE)
         time.sleep(Settings.DEFAULT_UI_DELAY)
@@ -314,20 +314,20 @@ def create_region_for_hamburger_menu():
         wait(hamburger_menu_pattern, 10)
         click(hamburger_menu_pattern)
         time.sleep(0.5)
-        sign_in_to_sync = Pattern('sign_in_to_sync.png')
+        sign_in_to_firefox = Pattern('sign_in_to_firefox.png')
         if OSHelper.is_linux():
             quit_menu_pattern = Pattern('quit.png')
-            return RegionUtils.create_region_from_patterns(None, sign_in_to_sync,
+            return RegionUtils.create_region_from_patterns(None, sign_in_to_firefox,
                                                            quit_menu_pattern, None,
                                                            padding_right=20)
         elif OSHelper.is_mac():
             help_menu_pattern = Pattern('help.png')
-            return RegionUtils.create_region_from_patterns(None, sign_in_to_sync,
+            return RegionUtils.create_region_from_patterns(None, sign_in_to_firefox,
                                                            help_menu_pattern, None,
                                                            padding_right=20)
         else:
             exit_menu_pattern = Pattern('exit.png')
-            return RegionUtils.create_region_from_patterns(None, sign_in_to_sync,
+            return RegionUtils.create_region_from_patterns(None, sign_in_to_firefox,
                                                            exit_menu_pattern, None,
                                                            padding_right=20)
     except (FindError, ValueError):
@@ -355,14 +355,14 @@ def create_region_from_image(image):
     :return: None.
     """
     try:
-        from mattapi.api.rectangle import Rectangle
-        from mattapi.api.enums import Alignment
+        from moziris.api.rectangle import Rectangle
+        from moziris.api.enums import Alignment
         m = image_find(image)
         if m:
-            sync_pattern = Pattern('sync_hamburger_menu.png')
-            sync_width, sync_height = sync_pattern.get_size()
-            sync_image = image_find(sync_pattern)
-            top_left = Rectangle(sync_image.x, sync_image.y, sync_width, sync_width). \
+            sign_in_pattern = Pattern('sign_in_to_firefox.png')
+            sign_in_width, sign_in_height = sign_in_pattern.get_size()
+            sign_in_image = image_find(sign_in_pattern)
+            top_left = Rectangle(sign_in_image.x, sign_in_image.y, sign_in_width, sign_in_width). \
                 apply_alignment(Alignment.TOP_RIGHT)
             if OSHelper.is_mac():
                 exit_pattern = Pattern('help_hamburger_menu.png')
@@ -696,6 +696,7 @@ def open_about_firefox():
 
     else:
         type(Key.F10)
+        time.sleep(Settings.DEFAULT_UI_DELAY_SHORT)
         if args.locale != 'ar':
             type(Key.LEFT)
         else:

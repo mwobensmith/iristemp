@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-mattapi = "==0.99.03"
+moziris = { git = 'https://github.com/mozilla/iris.git', ref = 'issue_556', editable = true }
 
 [dev-packages]
 pylint = "*"

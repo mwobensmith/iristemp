@@ -13,22 +13,22 @@ import shutil
 
 import pytest
 
-from mattapi.base.target import BaseTarget
-from mattapi.api.mouse.mouse import mouse_reset
-from mattapi.api.os_helpers import OSHelper
-from mattapi.util.arg_parser import get_core_args
-from mattapi.util.local_web_server import LocalWebServer
-from mattapi.util.path_manager import PathManager
-from mattapi.util.test_assert import create_result_object
+from moziris.base.target import BaseTarget
+from moziris.api.mouse.mouse import mouse_reset
+from moziris.api.os_helpers import OSHelper
+from moziris.util.arg_parser import get_core_args
+from moziris.util.local_web_server import LocalWebServer
+from moziris.util.path_manager import PathManager
+from moziris.util.test_assert import create_result_object
 
 logger = logging.getLogger(__name__)
 logger.info('Loading test images...')
 
-from mattapi.configuration.config_parser import get_config_property, validate_section
+from moziris.configuration.config_parser import get_config_property, validate_section
 from targets.firefox.bug_manager import is_blocked
 from targets.firefox.firefox_app.fx_browser import FXRunner, FirefoxProfile, FirefoxUtils
 from targets.firefox.firefox_app.fx_collection import FX_Collection
-from targets.firefox.firefox_ui.helpers.keyboard_shortcuts import quit_firefox
+from targets.firefox.firefox_ui.helpers.keyboard_shortcuts import quit_firefox, release_often_used_keys
 from targets.firefox.firefox_ui.helpers.version_parser import check_version
 from targets.firefox.testrail.testrail_client import report_test_results
 
@@ -51,8 +51,8 @@ class Target(BaseTarget):
             {'name': 'firefox', 'type': 'list', 'label': 'Firefox',
              'value': ['local', 'latest', 'latest-esr', 'latest-beta', 'nightly'], 'default': 'beta'},
             {'name': 'locale', 'type': 'list', 'label': 'Locale', 'value': OSHelper.LOCALES, 'default': 'en-US'},
-            {'name': 'mouse', 'type': 'list', 'label': 'Mouse speed', 'value': ['0.0', '0.5', '1.0', '2.0'],
-             'default': '0.5'},
+            {'name': 'max_tries', 'type': 'list', 'label': 'Maximum tries per test', 'value': ['1', '2', '3', '4', '5'],
+             'default': '3'},
             {'name': 'highlight', 'type': 'checkbox', 'label': 'Debug using highlighting'},
             {'name': 'override', 'type': 'checkbox', 'label': 'Run disabled tests'},
             {'name': 'email', 'type': 'checkbox', 'label': 'Email results'},
@@ -185,7 +185,6 @@ class Target(BaseTarget):
 
     def pytest_runtest_setup(self, item):
         BaseTarget.pytest_runtest_setup(self, item)
-
         if OSHelper.is_mac():
             mouse_reset()
         if item.name == 'run' and not core_args.override:
@@ -238,17 +237,15 @@ class Target(BaseTarget):
                                                                     ', '.join(skip_reason_list)))
                 test_instance = (item, 'SKIPPED', None)
                 test_result = create_result_object(test_instance, 0, 0)
-                self.completed_tests.append(test_result)
+                self.add_test_result(test_result)
                 Target.index += 1
                 pytest.skip(item)
 
     def pytest_runtest_call(self, item):
         """ called to execute the test ``item``. """
-
         logger.info(
             'Executing %s: - [%s]: %s' % (Target.index,
                 item.nodeid.split(':')[0], item.own_markers[0].kwargs.get('description')))
-        Target.index += 1
         try:
             if item.funcargs['firefox']:
                 item.funcargs['firefox'].start()
@@ -276,6 +273,7 @@ class Target(BaseTarget):
                         pass
                 else:
                     logger.error('Invalid Path: %s' % profile_instance.profile)
+
         except (AttributeError, KeyError):
             pass
 
@@ -295,6 +293,17 @@ class Target(BaseTarget):
 
         if target_args.update_channel:
             FirefoxUtils.set_update_channel_pref(app.path, target_args.update_channel)
+
+        is_rerun = False
+        if len(Target.completed_tests):
+            if Target.completed_tests[-1].file_name == request.node.fspath:
+                logger.debug('Rerun detected:')
+                logger.debug(Target.completed_tests[-1].file_name)
+                logger.debug(request.node.fspath)
+                is_rerun = True
+        if not is_rerun and len(Target.completed_tests) > 0:
+            logger.debug('Incrementing index')
+            Target.index += 1
 
         args = {'total': len(request.node.session.items), 'current': Target.index,
                 'title': os.path.basename(request.node.fspath)}
