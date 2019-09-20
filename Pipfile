@@ -4,8 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-#moziris = { git = 'https://github.com/mozilla/iris.git', ref = 'issue_556', editable = true }
-moziris = { git = 'https://github.com/mozilla/iris.git', ref = 'lazy_pattern', editable = true }
+moziris = { git = 'https://github.com/mozilla/iris.git', ref = 'issue_556', editable = true }
 
 [dev-packages]
 pylint = "*"
